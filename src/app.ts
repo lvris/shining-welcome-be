@@ -5,7 +5,6 @@ import cors from 'cors';
 require('dotenv').config();
 
 import * as middlewares from './middlewares';
-import api from './api';
 
 const app = express();
 
@@ -14,7 +13,11 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.use('/', api);
+import indexRouter from './routers/index';
+import guestRouter from "./routers/guest";
+
+app.use('/', indexRouter);
+app.use('/guest', guestRouter)
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

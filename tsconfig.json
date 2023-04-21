@@ -2,8 +2,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "sourceMap": true,
-    "target": "esnext",
+    "target": "ESNext",
     "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
@@ -12,6 +14,7 @@
   },
   "include": [
     "./*.js",
+    "prisma/*.ts",
     "src/**/*.ts",
     "test/**/*.ts",
   ],
