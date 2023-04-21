@@ -11,7 +11,7 @@ const password = process.env.PASSWORD ?? 'shining';
  */
 router.post<{},{},IAuth>('/', async (req, res, next) => {
   const pass = req.body.password;
-  if(pass == password) {
+  if(pass == password || (req as JWTRequest).auth?.admin == true) {
     const access = generateToken({admin: true});
     res.json({token: access});
   } else {

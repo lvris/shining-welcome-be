@@ -1,5 +1,5 @@
 export interface IAuth {
-  password: string
+  password?: string
 }
 
 export interface IToken {
