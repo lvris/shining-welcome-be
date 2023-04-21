@@ -1,7 +1,9 @@
 import express from 'express';
-import prisma from '../../prisma';
+import prisma from '../services/prisma';
 import { IPage } from '../common/interfaces/common.interface';
 import { IGuest, IGuestUpdate } from '../common/interfaces/guest.interface';
+import { generateToken } from '../services/token';
+import { Request as JWTRequest } from "express-jwt";
 
 const router = express.Router();
 
@@ -13,17 +15,22 @@ router.post<{},{},IGuest>('/', async (req, res) => {
   const guest = await prisma.guest.create({
     data: info
   });
-  res.json(guest);
+
+  const token = generateToken({ id: guest.id });
+  res.json({token, guest});
 })
 
 /**
  * 获取游客列表
  */
 router.get<IPage>('/', async (req, res) => {
+  if(!(req as JWTRequest).auth?.admin) {
+    return res.status(401);
+  }
   const page = req.params.page ?? 1;
   const pageSize = req.params.size ?? 10;
   const all = await prisma.guest.findMany({
-    skip: (page-1)*pageSize,
+    skip: (page - 1) * pageSize,
     take: pageSize
   });
   res.json(all);
@@ -32,6 +39,9 @@ router.get<IPage>('/', async (req, res) => {
  * 按照 ID 查询游客信息
  */
 router.get('/:id', async (req, res) => {
+  if(!(req as JWTRequest).auth?.admin) {
+    return res.status(401);
+  }
   const guestID = +req.params.id;
   const guest = await prisma.guest.findUnique({
     where: {
@@ -45,6 +55,9 @@ router.get('/:id', async (req, res) => {
  * 修改游客信息, 通常是为了修改 State
  */
 router.put<{id:string},{},IGuestUpdate>('/:id', async (req, res) => {
+  if(!(req as JWTRequest).auth?.admin) {
+    return res.status(401);
+  }
   const guest = await prisma.guest.update({
     where: {
       id: +req.params.id
@@ -58,6 +71,9 @@ router.put<{id:string},{},IGuestUpdate>('/:id', async (req, res) => {
  * 删除游客信息
  */
 router.delete('/:id', async (req, res) => {
+  if(!(req as JWTRequest).auth?.admin) {
+    return res.status(401);
+  }
   const guestID = +req.params.id;
   const guest = await prisma.guest.delete({
     where: {
