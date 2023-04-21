@@ -20,8 +20,8 @@ app.use(expressjwt({
   algorithms: ['HS512']
 }).unless({
   path: [
-    '/guest', { url: '/', method: 'POST' },
-    '/auth',
+    // '/guest', { url: '/', method: 'POST' },
+    // '/auth', { url: '/', method: 'POST' }
   ],
 }))
  
