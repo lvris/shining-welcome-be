@@ -1,59 +1,76 @@
-# Express API Starter with Typescript
+## Shining Welcome (be)
 
-How to use this template:
+基于 Express+prisma(sqlite)+[morgan](https://www.npmjs.com/package/morgan)+[jest](https://www.npmjs.com/package/mocha), 后端好麻烦我不想写啦.
 
-```sh
-npx create-express-api --typescript --directory my-api-name
-```
+## Project Releted
 
-Includes API Server utilities:
-
-* [morgan](https://www.npmjs.com/package/morgan)
-  * HTTP request logger middleware for node.js
-* [helmet](https://www.npmjs.com/package/helmet)
-  * Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
-* [dotenv](https://www.npmjs.com/package/dotenv)
-  * Dotenv is a zero-dependency module that loads environment variables from a `.env` file into `process.env`
-* [cors](https://www.npmjs.com/package/cors)
-  * CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
-
-Development utilities:
-
-* [typescript](https://www.npmjs.com/package/typescript)
-  * TypeScript is a language for application-scale JavaScript.
-* [ts-node](https://www.npmjs.com/package/ts-node)
-  * TypeScript execution and REPL for node.js, with source map and native ESM support.
-* [nodemon](https://www.npmjs.com/package/nodemon)
-  * nodemon is a tool that helps develop node.js based applications by automatically restarting the node application when file changes in the directory are detected.
-* [eslint](https://www.npmjs.com/package/eslint)
-  * ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.
-* [typescript-eslint](https://typescript-eslint.io/)
-  * Tooling which enables ESLint to support TypeScript.
-* [jest](https://www.npmjs.com/package/mocha)
-  * Jest is a delightful JavaScript Testing Framework with a focus on simplicity.
-* [supertest](https://www.npmjs.com/package/supertest)
-  * HTTP assertions made easy via superagent.
-
-## Setup
+#### Setup
 
 ```
 npm install
 ```
 
-## Lint
-
-```
-npm run lint
-```
-
-## Test
-
-```
-npm run test
-```
-
-## Development
+#### Compiles and hot-reloads for development
 
 ```
 npm run dev
+```
+
+#### Compiles and minifies for production
+
+1. Configue Environment
+   - Node & Npm (dev_local 18.14.2 & 9.6.5)
+   - Production process manager for Node, like `pm2`
+2. Set .env file varibles
+3. Edit prisma/schema's generator to Linux
+4. Run with certain Node runner
+
+```bash
+npm install
+vim .env                    // Set Environments, including PORT, DB and Keys
+tsc                         // npm run build
+pm2 dist/src/index.js
+```
+
+##### HTTPS
+
+To enable TLS, just add following code to index.ts.
+
+```javascript
+// Certificate
+const privateKey = fs.readFileSync('/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('cert.pem', 'utf8');
+const ca = fs.readFileSync('chain.pem', 'utf8');
+
+const credentials = {
+    key: privateKey,
+    cert: certificate,
+    ca: ca
+};
+
+// Starting both http & https servers
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(80, () => {
+    console.log('HTTP Server running on port 80');
+});
+
+httpsServer.listen(443, () => {
+    console.log('HTTPS Server running on port 443');
+});
+```
+
+##### Prisma
+
+I haven't tried wheather prisma(ORM - sqlite) can work in production environment, so if you encounted any problems, the [official doc](https://prisma.yoga/guides/deployment/deployment-guides) may be helpful.
+
+At least, the generator should be modified to make DB operating commands pertain to Linux.
+
+```prisma
+datasource db {
+  provider      = "sqlite"
+  binaryTargets = "debian-openssl-1.1.x"
+  url           = env("DATABASE_URL")
+}
 ```
