@@ -17,11 +17,11 @@ app.use(express.json());
 const tokenKey = process.env.TOKEN_KEY ?? 'shining';
 app.use(expressjwt({
   secret: tokenKey,
-  algorithms: ['HS512']
+  algorithms: ['HS512'],
+  credentialsRequired: false,
 }).unless({
   path: [
-    // '/guest', { url: '/', method: 'POST' },
-    // '/auth', { url: '/', method: 'POST' }
+    { url: '/guest', methods: ['POST'] },
   ],
 }))
  
