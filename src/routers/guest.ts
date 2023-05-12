@@ -20,15 +20,23 @@ router.post<{},{},IGuest>('/', async (req, res) => {
   res.json({token, guest});
 })
 
-/**
- * 获取游客列表
- */
-router.get<IPage>('/', async (req, res) => {
+router.get<{},{},number>('/total', async (req, res) => {
   if(!(req as JWTRequest).auth?.admin) {
     return res.status(401);
   }
-  const page = req.params.page ?? 1;
-  const pageSize = req.params.size ?? 10;
+  const total = await prisma.guest.count();
+  res.json(total);
+})
+
+/**
+ * 获取游客列表
+ */
+router.get<{},{},{},IPage>('/', async (req, res) => {
+  if(!(req as JWTRequest).auth?.admin) {
+    return res.status(401);
+  }
+  const page = req.query.page || 1;
+  const pageSize = req.query.size || 10;
   const all = await prisma.guest.findMany({
     skip: (page - 1) * pageSize,
     take: pageSize

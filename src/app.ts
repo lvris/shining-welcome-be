@@ -29,9 +29,9 @@ import indexRouter from './routers/index';
 import guestRouter from "./routers/guest";
 import authRouter from "./routers/auth";
 
-app.use('/', indexRouter);
-app.use('/guest', guestRouter);
-app.use('/auth', authRouter);
+app.use('/api', indexRouter);
+app.use('/api/guest', guestRouter);
+app.use('/api/auth', authRouter);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
