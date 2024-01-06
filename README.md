@@ -1,8 +1,10 @@
 ## Shining Welcome (be)
 
-基于 Express+prisma(sqlite)+[morgan](https://www.npmjs.com/package/morgan)+[jest](https://www.npmjs.com/package/mocha), 后端好麻烦我不想写啦.
+The background system of Shining-Welcome site.
 
-## Project Releted
+Based on Express+prisma(sqlite)+[morgan](https://www.npmjs.com/package/morgan)+[jest](https://www.npmjs.com/package/mocha).
+
+## Project Related
 
 #### Setup
 
@@ -18,7 +20,7 @@ npm run dev
 
 #### Compiles and minifies for production
 
-1. Configue Environment
+1. Configure Environment
    - Node & Npm (dev_local 18.14.2 & 9.6.5)
    - Production process manager for Node, like `pm2`
 2. Set .env file varibles
@@ -63,7 +65,7 @@ httpsServer.listen(443, () => {
 
 ##### Prisma
 
-I haven't tried wheather prisma(ORM - sqlite) can work in production environment, so if you encounted any problems, the [official doc](https://prisma.yoga/guides/deployment/deployment-guides) may be helpful.
+I haven't tried wheather prisma(ORM - sqlite) can work in production environment, so if you encountered any problems, the [official doc](https://prisma.yoga/guides/deployment/deployment-guides) may be helpful.
 
 At least, the generator should be modified to make DB operating commands pertain to Linux.
 
